@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <title>World Editor</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="#" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
 
-	<head>
-		<title>World Editor</title>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link href="css/style.css" rel="stylesheet" />
-	</head>
-
-	<body>
-		<h1>World Editor</h1>
-		<canvas id="myCanvas"></canvas>
-		<!-- <div id="controls">
+  <body>
+    <h1>World Editor</h1>
+    <canvas id="myCanvas"></canvas>
+    <!-- <div id="controls">
 			<button onclick="addRandomPoint()">Add Point</button>
 			<button onclick="removeRandomPoint()">Remove Point</button>
 			<button onclick="addRandomSegment()">Add Segment</button>
@@ -19,39 +19,39 @@
 			<button onclick="removeAll()">Remove All</button>
 		</div> -->
 
-		<script src="js/graphEditor.js"></script>
-		<script src="js/math/utils.js"></script>
-		<script src="js/math/graph.js"></script>
-		<script src="js/primitive/point.js"></script>
-		<script src="js/primitive/segment.js"></script>
-		<script>
-			const myCanvas = document.getElementById("myCanvas")
-			myCanvas.width = 700
-			myCanvas.height = 500
+    <script src="js/graphEditor.js"></script>
+    <script src="js/math/utils.js"></script>
+    <script src="js/math/graph.js"></script>
+    <script src="js/primitive/point.js"></script>
+    <script src="js/primitive/segment.js"></script>
+    <script>
+      const myCanvas = document.getElementById("myCanvas");
+      myCanvas.width = 700;
+      myCanvas.height = 500;
 
-			const ctx = myCanvas.getContext("2d")
+      const ctx = myCanvas.getContext("2d");
 
-			const p1 = new Point(200, 400)
-			const p2 = new Point(500, 200)
-			const p3 = new Point(600, 200)
-			const p4 = new Point(400, 100)
+      const p1 = new Point(200, 400);
+      const p2 = new Point(500, 200);
+      const p3 = new Point(600, 200);
+      const p4 = new Point(400, 100);
 
-			const s1 = new Segment(p1, p3)
-			const s3 = new Segment(p2, p4)
-			const s2 = new Segment(p2, p1)
-			const s4 = new Segment(p3, p4)
+      const s1 = new Segment(p1, p3);
+      const s3 = new Segment(p2, p4);
+      const s2 = new Segment(p2, p1);
+      const s4 = new Segment(p3, p4);
 
-			const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4])
-			const graphEditor = new GraphEditor(myCanvas, graph)
+      const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
+      const graphEditor = new GraphEditor(myCanvas, graph);
 
-			animate()
+      animate();
 
-			function animate () {
-				ctx.clearRect(0, 0, myCanvas.width, myCanvas.height)
-				graphEditor.display()
-				requestAnimationFrame(animate)
-			}
-		</script>
-	</body>
-
+      function animate() {
+        ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        graphEditor.display();
+        requestAnimationFrame(animate);
+      }
+    </script>
+  </body>
 </html>
+
