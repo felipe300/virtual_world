@@ -11,15 +11,18 @@
   <body>
     <h1>World Editor</h1>
     <canvas id="myCanvas"></canvas>
-    <!-- <div id="controls">
-			<button onclick="addRandomPoint()">Add Point</button>
-			<button onclick="removeRandomPoint()">Remove Point</button>
-			<button onclick="addRandomSegment()">Add Segment</button>
-			<button onclick="removeSegment()">Remove Segment</button>
-			<button onclick="removeAll()">Remove All</button>
-		</div> -->
+    <div id="controls">
+      <button onclick="dispose()">🗑️</button>
+      <button onclick="save()">💾</button>
+      <!-- <button onclick="addRandomPoint()">Add Point</button> -->
+      <!-- <button onclick="removeRandomPoint()">Remove Point</button> -->
+      <!-- <button onclick="addRandomSegment()">Add Segment</button> -->
+      <!-- <button onclick="removeSegment()">Remove Segment</button> -->
+      <!-- <button onclick="removeAll()">Remove All</button> -->
+    </div>
 
     <script src="js/graphEditor.js"></script>
+    <script src="js/viewport.js"></script>
     <script src="js/math/utils.js"></script>
     <script src="js/math/graph.js"></script>
     <script src="js/primitive/point.js"></script>
@@ -31,25 +34,26 @@
 
       const ctx = myCanvas.getContext("2d");
 
-      const p1 = new Point(200, 400);
-      const p2 = new Point(500, 200);
-      const p3 = new Point(600, 200);
-      const p4 = new Point(400, 100);
-
-      const s1 = new Segment(p1, p3);
-      const s3 = new Segment(p2, p4);
-      const s2 = new Segment(p2, p1);
-      const s4 = new Segment(p3, p4);
-
-      const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
-      const graphEditor = new GraphEditor(myCanvas, graph);
+      const graphString = localStorage.getItem("graph");
+      const graphInfo = graphString ? JSON.parse(graphString) : null;
+      const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+      const viewport = new Viewport(myCanvas);
+      const graphEditor = new GraphEditor(viewport, graph);
 
       animate();
 
       function animate() {
-        ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        viewport.reset();
         graphEditor.display();
         requestAnimationFrame(animate);
+      }
+
+      function dispose() {
+        graphEditor.dispose();
+      }
+
+      function save() {
+        localStorage.setItem("graph", JSON.stringify(graph));
       }
     </script>
   </body>
