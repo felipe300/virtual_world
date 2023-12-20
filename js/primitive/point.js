@@ -21,8 +21,8 @@ class Point {
     ctx.fillStyle = color;
     // ctx.arc(this.x, this.y, rad, 0, Math.PI * 2)
     this.#arc(rad * 1);
-
     ctx.fill();
+
     if (outline) {
       ctx.beginPath();
       ctx.lineWidth = 2;
@@ -41,4 +41,3 @@ class Point {
     }
   }
 }
-
