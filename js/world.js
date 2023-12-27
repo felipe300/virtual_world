@@ -31,6 +31,7 @@ class World {
         new Envelope(seg, this.roadWidth, this.roadRoundness),
       );
     }
+
     this.roadBorders = Polygon.union(this.envelopes.map((e) => e.poly));
     this.buildings = this.#generateBuildings();
     this.trees = this.#generateTrees();
@@ -39,15 +40,15 @@ class World {
   #generateTrees() {
     const points = [
       ...this.roadBorders.map((s) => [s.p1, s.p2]).flat(),
-      ...this.buildings.map((b) => b.points).flat(),
+      ...this.buildings.map((b) => b.base.points).flat(),
     ];
     const left = Math.min(...points.map((p) => p.x));
     const right = Math.max(...points.map((p) => p.x));
     const top = Math.min(...points.map((p) => p.y));
-    const botom = Math.max(...points.map((p) => p.y));
+    const bottom = Math.max(...points.map((p) => p.y));
 
     const illegalPolys = [
-      ...this.buildings,
+      ...this.buildings.map((b) => b.base),
       ...this.envelopes.map((e) => e.poly),
     ];
 
@@ -56,9 +57,10 @@ class World {
     while (tryCount < 100) {
       const p = new Point(
         lerp(left, right, Math.random()),
-        lerp(botom, top, Math.random()),
+        lerp(bottom, top, Math.random()),
       );
 
+      // check if tree inside or nearby building / road
       let keep = true;
       for (const poly of illegalPolys) {
         if (
@@ -70,15 +72,17 @@ class World {
         }
       }
 
+      // check if tree too close to other trees
       if (keep) {
         for (const tree of trees) {
-          if (distance(tree, p) < this.treeSize) {
+          if (distance(tree.center, p) < this.treeSize) {
             keep = false;
             break;
           }
         }
       }
 
+      // avoiding trees in the middle of nowhere
       if (keep) {
         let closeToSomething = false;
         for (const poly of illegalPolys) {
@@ -91,12 +95,11 @@ class World {
       }
 
       if (keep) {
-        trees.push(p);
+        trees.push(new Tree(p, this.treeSize));
         tryCount = 0;
       }
       tryCount++;
     }
-
     return trees;
   }
 
@@ -113,6 +116,7 @@ class World {
     }
 
     const guides = Polygon.union(tmpEnvelopes.map((e) => e.poly));
+
     for (let i = 0; i < guides.length; i++) {
       const seg = guides[i];
       if (seg.length() < this.buildingMinLength) {
@@ -122,7 +126,7 @@ class World {
     }
 
     const supports = [];
-    for (const seg of guides) {
+    for (let seg of guides) {
       const len = seg.length() + this.spacing;
       const buildingCount = Math.floor(
         len / (this.buildingMinLength + this.spacing),
@@ -130,11 +134,12 @@ class World {
       const buildingLength = len / buildingCount - this.spacing;
 
       const dir = seg.directionVector();
+
       let q1 = seg.p1;
       let q2 = add(q1, scale(dir, buildingLength));
       supports.push(new Segment(q1, q2));
 
-      for (let i = 2; i < buildingCount; i++) {
+      for (let i = 2; i <= buildingCount; i++) {
         q1 = add(q2, scale(dir, this.spacing));
         q2 = add(q1, scale(dir, buildingLength));
         supports.push(new Segment(q1, q2));
@@ -159,10 +164,10 @@ class World {
       }
     }
 
-    return bases;
+    return bases.map((b) => new Building(b));
   }
 
-  draw() {
+  draw(ctx, viewPoint) {
     for (const env of this.envelopes) {
       env.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 });
     }
@@ -172,11 +177,14 @@ class World {
     for (const seg of this.roadBorders) {
       seg.draw(ctx, { color: "white", width: 4 });
     }
-    for (const tree of this.trees) {
-      tree.draw(ctx, { size: this.treeSize, color: "rgba(0,0,0,0.5)" });
-    }
-    for (const bld of this.buildings) {
-      bld.draw(ctx);
+
+    const items = [...this.buildings, ...this.trees];
+    items.sort(
+      (a, b) =>
+        b.base.distanceToPoint(viewPoint) - a.base.distanceToPoint(viewPoint),
+    );
+    for (const item of items) {
+      item.draw(ctx, viewPoint);
     }
   }
 }

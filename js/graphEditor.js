@@ -17,7 +17,6 @@ class GraphEditor {
   #addEventListeners() {
     this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
     this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
-    // remove right click menu, when right click
     this.canvas.addEventListener(
       "contextmenu",
       this.#handleContextMenu.bind(this),
@@ -33,7 +32,6 @@ class GraphEditor {
   }
 
   #handleMouseDown(evt) {
-    // right click
     if (evt.button === 2) {
       if (this.selected) {
         this.selected = null;
@@ -42,7 +40,6 @@ class GraphEditor {
       }
     }
 
-    // left click
     if (evt.button === 0) {
       if (this.hovered) {
         this.#select(this.hovered);

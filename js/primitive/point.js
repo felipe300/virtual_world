@@ -19,7 +19,6 @@ class Point {
     const rad = size / 2;
     ctx.beginPath();
     ctx.fillStyle = color;
-    // ctx.arc(this.x, this.y, rad, 0, Math.PI * 2)
     this.#arc(rad * 1);
     ctx.fill();
 
@@ -27,14 +26,12 @@ class Point {
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "yellow";
-      // ctx.arc(this.x, this.y, rad * 0.6, 0, Math.PI * 2)
       this.#arc(rad * 0.6);
       ctx.stroke();
     }
 
     if (fill) {
       ctx.beginPath();
-      // ctx.arc(this.x, this.y, rad * 0.6, 0, Math.PI * 2)
       this.#arc(rad * 0.4);
       ctx.fillStyle = "yellow";
       ctx.fill();

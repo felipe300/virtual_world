@@ -60,7 +60,6 @@ function getIntersection(A, B, C, D) {
   const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
   const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
 
-  // botom is almost "0", but bcuz floats numbers is not "0"
   const eps = 0.001;
   if (Math.abs(bottom) > eps) {
     const t = tTop / bottom;
@@ -81,7 +80,18 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
+function lerp2D(a, b, t) {
+  return new Point(lerp(a.x, b.x, t), lerp(a.y, b.y, t));
+}
+
 function getRandomColor() {
   const hue = 290 + Math.random() * 260;
-  return "hsl(" + hue + ", 100%, 60%)";
+  return `hsl(${hue}, 100%, 60%)`;
+}
+
+function getFake3dPoint(point, viewPoint, height) {
+  const dir = normalize(subtract(point, viewPoint));
+  const dist = distance(point, viewPoint);
+  const scaler = Math.atan(dist / 300) / (Math.PI / 2);
+  return add(point, scale(dir, height * scaler));
 }
