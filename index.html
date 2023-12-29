@@ -12,18 +12,21 @@
     <h1>World Editor</h1>
     <canvas id="myCanvas"></canvas>
     <div id="controls">
-      <button onclick="dispose()">🗑️</button>
-      <button onclick="save()">💾</button>
-      <!-- <button onclick="addRandomPoint()">Add Point</button> -->
-      <!-- <button onclick="removeRandomPoint()">Remove Point</button> -->
-      <!-- <button onclick="addRandomSegment()">Add Segment</button> -->
-      <!-- <button onclick="removeSegment()">Remove Segment</button> -->
-      <!-- <button onclick="removeAll()">Remove All</button> -->
+      <div>
+        <button onclick="dispose()">🗑️</button>
+        <button onclick="save()">💾</button>
+      </div>
+      <div>
+        <button id="graphBtn" onclick="setMode('graph')">🗺️</button>
+        <button id="stopBtn" onclick="setMode('stop')">🛑</button>
+      </div>
     </div>
 
     <script src="js/world.js"></script>
-    <script src="js/graphEditor.js"></script>
     <script src="js/viewport.js"></script>
+    <script src="js/markings/stop.js"></script>
+    <script src="js/editors/graphEditor.js"></script>
+    <script src="js/editors/stopEditor.js"></script>
     <script src="js/items/tree.js"></script>
     <script src="js/items/building.js"></script>
     <script src="js/math/utils.js"></script>
@@ -45,8 +48,10 @@
       const world = new World(graph);
       const viewport = new Viewport(myCanvas);
       const graphEditor = new GraphEditor(viewport, graph);
+      const stopEditor = new StopEditor(viewport, world);
 
       let oldGraphHash = graph.hash();
+      setMode("graph");
       animate();
 
       function animate() {
@@ -59,15 +64,42 @@
         world.draw(ctx, viewPoint);
         ctx.globalAlpha = 0.3;
         graphEditor.display();
+        stopEditor.display();
         requestAnimationFrame(animate);
       }
 
       function dispose() {
         graphEditor.dispose();
+        world.markings.length = 0;
       }
 
       function save() {
         localStorage.setItem("graph", JSON.stringify(graph));
+      }
+
+      function setMode(mode) {
+        dissabledEditors();
+        switch (mode) {
+          case "graph":
+            graphBtn.style.backgroundColor = "white";
+            graphBtn.style.filter = "";
+            graphEditor.enable();
+            break;
+          case "stop":
+            stopBtn.style.backgroundColor = "white";
+            stopBtn.style.filter = "";
+            stopEditor.enable();
+            break;
+        }
+      }
+
+      function dissabledEditors() {
+        graphBtn.style.backgroundColor = "gray";
+        graphBtn.style.filter = "grayscale(100%)";
+        graphEditor.disable();
+        stopBtn.style.backgroundColor = "gray";
+        stopBtn.style.filter = "grayscale(100%)";
+        stopEditor.disable();
       }
     </script>
   </body>

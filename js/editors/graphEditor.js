@@ -35,10 +35,10 @@ class GraphEditor {
   }
 
   #removeEventListeners() {
-    this.canvas.removeEventListeners("mousedown", this.boundMouseDown);
-    this.canvas.removeEventListeners("mousemove", this.boundMouseMove);
-    this.canvas.removeEventListeners("mouseup", this.boundMouseMoveUp);
-    this.canvas.removeEventListeners("contextmenu", this.boundContextMenu);
+    this.canvas.removeEventListener("mousedown", this.boundMouseDown);
+    this.canvas.removeEventListener("mousemove", this.boundMouseMove);
+    this.canvas.removeEventListener("mouseup", this.boundMouseMoveUp);
+    this.canvas.removeEventListener("contextmenu", this.boundContextMenu);
   }
 
   #select(point) {
@@ -80,6 +80,14 @@ class GraphEditor {
       this.selected.x = this.mouse.x;
       this.selected.y = this.mouse.y;
     }
+  }
+
+  #handleContextMenu(evt) {
+    evt.preventDefault();
+  }
+
+  #handleMouseMoveUp(evt) {
+    this.dragging = false;
   }
 
   #removePoint(point) {
