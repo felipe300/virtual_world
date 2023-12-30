@@ -22,6 +22,7 @@
         <button id="parkingBtn" onclick="setMode('parking')">🅿️</button>
         <button id="startBtn" onclick="setMode('start')">🚗</button>
         <button id="stopBtn" onclick="setMode('stop')">🛑</button>
+        <button id="lightBtn" onclick="setMode('light')">🚦</button>
         <button id="targetBtn" onclick="setMode('target')">🎯</button>
         <button id="yieldBtn" onclick="setMode('yield')">🔺</button>
       </div>
@@ -33,10 +34,12 @@
     <script src="js/markings/stop.js"></script>
     <script src="js/markings/start.js"></script>
     <script src="js/markings/crossing.js"></script>
+    <script src="js/markings/light.js"></script>
     <script src="js/markings/yield.js"></script>
     <script src="js/markings/parking.js"></script>
     <script src="js/markings/target.js"></script>
     <script src="js/editors/markingEditor.js"></script>
+    <script src="js/editors/lightEditor.js"></script>
     <script src="js/editors/graphEditor.js"></script>
     <script src="js/editors/stopEditor.js"></script>
     <script src="js/editors/startEditor.js"></script>
@@ -70,6 +73,7 @@
         stop: { button: stopBtn, editor: new StopEditor(viewport, world) },
         start: { button: startBtn, editor: new StartEditor(viewport, world) },
         yield: { button: yieldBtn, editor: new YieldEditor(viewport, world) },
+        light: { button: lightBtn, editor: new LightEditor(viewport, world) },
         parking: {
           button: parkingBtn,
           editor: new ParkingEditor(viewport, world),
@@ -129,4 +133,3 @@
     </script>
   </body>
 </html>
-
