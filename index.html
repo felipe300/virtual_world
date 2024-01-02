@@ -15,6 +15,15 @@
       <div>
         <button onclick="dispose()">🗑️</button>
         <button onclick="save()">💾</button>
+        <label for="fileInput" class="file-input-label">
+          📁
+          <input
+            type="file"
+            id="fileInput"
+            accept=".world"
+            onchange="load(event)"
+          />
+        </label>
       </div>
       <div>
         <button id="graphBtn" onclick="setMode('graph')">🗺️</button>
@@ -114,7 +123,41 @@
       }
 
       function save() {
+        world.zoom = viewport.zoom;
+        world.offset = viewport.offset;
+
+        const element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          `data:application/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify(world),
+          )}`,
+        );
+        const filename = "name.world";
+        element.setAttribute("download", filename);
+        element.click();
+
         localStorage.setItem("world", JSON.stringify(world));
+      }
+
+      function load(event) {
+        const file = event.target.files[0];
+
+        if (!file) {
+          alert("no file selected");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsText(file);
+
+        reader.onload = (evt) => {
+          const fileContent = evt.target.result;
+          const JsonData = JSON.parse(fileContent);
+          world = World.load(JsonData);
+          localStorage.setItem("world", JSON.stringify(world));
+          location.reload();
+        };
       }
 
       function setMode(mode) {
